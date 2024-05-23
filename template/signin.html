@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="/static/images/ic.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/signin.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign in</title>
+</head>
+<body class="text-center">
+
+    <div class="container">
+        <form class="form-signin" method="POST" action="/sign_in">
+            <div class="head">
+                <span>Please sign in</span>
+                <p>Enter your credentials to sign in.</p>
+            </div>
+            <div class="inputs">
+                <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus name="username">
+                <input type="password" id="inputPassword" class="form-control" placeholder="Password" required name="password">
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        </form>
+        <div class="form-footer">
+            <p>Don't have an account? <a href="/sign_up">Sign up</a></p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        if ("{{message}}" != "") {
+            alert("{{message}}")
+        }
+    </script>
+    <script type="text/javascript" src="/static/script/signin.ui.js"></script>
+</body>
+</html>

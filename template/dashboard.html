@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/static/images/ic.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script type="text/javascript" src="/static/script/profile.js"></script>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <title>Dashboard</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="alert alert-warning">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="/static/avatars/blank.png" class="card-img-top" alt="Profile Picture">
+                    <div class="card-body">
+                        <h5 class="card-title">{{name}}
+                            <form method="GET" action="/logout" class="ml-2">
+                                <button type="submit" class="btn btn-link p-0 border-0">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </button>
+                            </form>
+                        </h5>
+                        <p class="card-text">Number of files: {{nf}}</p>
+                        <p class="card-text">Total space used: {{space}} mb</p>
+                        <p class="card-text">Space available: <span id="space-available"></span> gb</p>
+                        <form method="POST" action="/upload/{{ username }}/file" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="file-upload" class="btn btn-primary">Select files</label>
+                                <input type="file" id="file-upload" name="files[]" multiple style="display:none;">
+                            </div>
+                            <button type="submit" class="btn btn-success">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <form method="POST" action="/search/{{username}}" class="search-form">
+                    <input class="search-input" type="text" name="search" placeholder="Search">
+                    <button class="search-button" type="submit">Search</button>
+                </form>
+                <div class="row">
+                    {% for i in files %}
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        {{i.name[0:10]}}{% if i.name|length > 10 %}...{% endif %}
+                                        <button class="block-btn info-btn" onclick="showInfo('{{i.name}}', '{{i.size}}')">
+                                            <i class="fas fa-info-circle"></i>
+                                        </button>
+                                    </h5>
+                                    <a href="/delete/{{username}}/{{i.name}}" class="btn btn-danger">Delete</a>
+                                    <a href="/download/{{username}}/name/{{i.name}}" class="btn btn-primary">Download</a>
+                                    <form method="GET" action="/convert/{{username}}/name/{{i.name}}">
+                                        <button type="submit" class="btn btn-secondary">Convert File</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showInfo(name, size) {
+            alert("Name: " + name + "\nSize: " + size );
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.js"></script>
+    <script>
+        document.getElementById('space-available').innerText = Math.floor((1 - ({{space}})/1024)*1000)/1000;
+    
+        var limit = 25600 - {{space}};
+        document.getElementsByTagName("input")[0].oninput = k;
+        function k() {
+            var n =0;
+            var si= [];
+            var cn=[];
+            while (n < document.getElementsByTagName("input")[0].files.length) {
+                if ((document.getElementsByTagName("input")[0].files[n].size/1024/1024) > 2048) {
+                    cn.push(false);
+                }
+                si.push(document.getElementsByTagName("input")[0].files[n].size/1024/1024)
+                n=n+1
+            }
+            var n =0;
+            for (var i = 0; i < si.length; i++) {
+                var n = n+si[i];
+            }
+            if (n > limit) {
+                alert("Storage is not available. Upload less larger file.");
+                document.getElementsByTagName("input")[0].value= null;
+            } else {
+                if (cn[0] == false) {
+                    alert("File size should not be greater than 2gb");
+                    document.getElementsByTagName("input")[0].value= null;
+                } else {
+                    //do nothing
+                }
+            }
+        }
+    </script>
+</body>
+</html>
