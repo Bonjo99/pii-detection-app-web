@@ -1,12 +1,11 @@
 from flask import *
 from flask import jsonify #solo per errore too many request
 from flask import render_template, send_file
-from flask_limiter import Limiter, RateLimitExceeded
-from flask_limiter.util import get_remote_address
 from flask import flash
 from flask import redirect, url_for, request, session, make_response
 import shutil, os, datetime, random
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
+from azure.core.credentials import AzureKeyCredential
 from werkzeug.utils import secure_filename
 import tempfile
 import io 
@@ -33,16 +32,15 @@ from io import BytesIO
 from reportlab.lib.pagesizes import letter
 import logging
 from concurrent.futures import ThreadPoolExecutor
-load_dotenv()
 
 app = Flask(__name__, static_folder="static", template_folder="template")
 app.secret_key = os.urandom(24)
 bcrypt = Bcrypt(app)
-connection_string = os.getenv('STRING_CONNECTION')
-language_key = os.getenv('LANGUAGE_KEY')
-language_endpoint = os.getenv('ENDPOINT')
-user=os.getenv('DB_NAME')
-db_password=os.getenv('DB_PASSWORD')
+connection_string = "DefaultEndpointsProtocol=https;AccountName=archiviocartelle;AccountKey=RSR+7NZLPvX8JCl2T/7zB29JcyC9lLe+BqRlFd63PeYP8urWUACSo1yrM2GiXibXi1QSyEReRo4m+AStJj6+ow==;EndpointSuffix=core.windows.net"
+language_key = "ef9d0971353548fbaa27880a6cfc1039"
+language_endpoint = "https://progettosistemi.cognitiveservices.azure.com/"
+user="azure_admin_pii"
+db_password="MjNORBNh$nbeKOyU"
 blob_service_client = BlobServiceClient.from_connection_string('DefaultEndpointsProtocol=https;AccountName=archiviocartelle;AccountKey=RSR+7NZLPvX8JCl2T/7zB29JcyC9lLe+BqRlFd63PeYP8urWUACSo1yrM2GiXibXi1QSyEReRo4m+AStJj6+ow==;EndpointSuffix=core.windows.net')
 policy = PasswordPolicy.from_names(length
                                    =12,)
@@ -50,12 +48,6 @@ policy = PasswordPolicy.from_names(length
 #logging.basicConfig(level=logging.DEBUG)
 def rf(a):
 	return open(a,"r").read()
-
-load_dotenv()
-
-
-from azure.ai.textanalytics import TextAnalyticsClient
-from azure.core.credentials import AzureKeyCredential
 
 # Authenticate the client using your key and endpoint 
 def authenticate_client():
