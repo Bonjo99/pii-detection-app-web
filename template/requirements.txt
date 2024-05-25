@@ -1,19 +1,19 @@
-pip install mysql-connector-python
-pip install zxcvbn
-pip install azure-ai-textanalytics
-pip install Flask
-pip install azure-core
-pip install argon2-cffi
-pip install Flask-Limiter
-pip install Flask-Bcrypt
-pip install password-strength
-pip install pymysql
-pip install pyodbc
-pip install azure-storage-blob
-pip install pwnedpasswords
-pip install python-dotenv
-pip install pdfplumber
-pip install Werkzeug
-pip install python-docx
-pip install azure-identity
-pip install reportlab
+mysql-connector-python
+zxcvbn
+azure-ai-textanalytics
+Flask
+azure-core
+argon2-cffi
+Flask-Limiter
+Flask-Bcrypt
+password-strength
+pymysql
+pyodbc
+azure-storage-blob
+pwnedpasswords
+python-dotenv
+pdfplumber
+Werkzeug
+python-docx
+azure-identity
+reportlab
