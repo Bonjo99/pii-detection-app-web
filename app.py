@@ -338,6 +338,7 @@ def pii_detection(documents, name, extension, file_blob, files_container):
     response = client.recognize_pii_entities(documents, language="en")
     confidence_scores = []  # Aggiungi una lista per salvare i punteggi di confidenza
     metadata={}
+    pii_found = False
     for doc in response:
             if not doc.is_error:
                 for entity in doc.entities:
@@ -346,6 +347,8 @@ def pii_detection(documents, name, extension, file_blob, files_container):
                     metadata[entity.text] = entity.category
             else:
                 print("Error:", doc.error.message)
+    if not pii_found:
+        return {}, "No PII found"
     print("Metadata:", metadata)
 
     # Calcola il punteggio di confidenza medio e lo mostra a schermo
@@ -460,11 +463,11 @@ def search(user):
             space = sum([blob.size for blob in files_container.list_blobs()]) / 1024 / 1024
             
             # Fetch user details for rendering the dashboard
-            return render_template("dashboard.html", name=user, space=round(space), nf=len(files), files=files)
+            return render_template("dashboard.html", username=user, space=round(space), nf=len(files), files=files)
         else:
             return redirect(url_for('dashboard', username=user))
     else:  # GET request
-        return render_template("dashboard.html", name=user, space=round(space), nf=len(files), files=files)
+        return render_template("dashboard.html", username=user, space=round(space), nf=len(files), files=files)
 
 if __name__ == '__main__':
     app.run()
