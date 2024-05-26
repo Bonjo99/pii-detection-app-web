@@ -22,7 +22,6 @@ from azure.ai.textanalytics import TextAnalyticsClient
 from azure.identity import DefaultAzureCredential
 from azure.core.exceptions import HttpResponseError
 from dotenv import load_dotenv
-import pypyodbc as odbc
 import mysql.connector
 from mysql.connector import Error
 import re
